@@ -1,5 +1,22 @@
 ﻿@page "/s/edit"
 
-<h3>Pages</h3>
+<div class="container main content">
+  <NewLink></NewLink>
+  <div id="linkHeader" class="columns is-mobile is-vcentered is-gapless">
+    <div class="column">
+      <h3 class="has-text-primary is-size-3 has-text-weight-medium">
+        Links
+      </h3>
+    </div>
+    <div class="column">
+      <span class="is-pulled-right">Drag links to re-order</span>
+    </div>
+  </div>
+  <link-list :links="currentList.links" :editable="true"></link-list>
+  <button id="deleteButton" v-if="currentList.links.length > 0 && listIsPublished"
+    class="button is-large is-danger has-text-white is-fullwidth" @click="showDelete = true">
+    Delete This List
+  </button>
+</div>
 
-@code { } 
+@code { }

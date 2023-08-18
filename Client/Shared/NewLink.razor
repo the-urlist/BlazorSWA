@@ -1,12 +1,15 @@
 @using BlazorApp.Shared
+@inject NavigationManager NavigationManager
 
-<EditForm Model="@Model" OnValidSumit="@OnValidSubmit">
-  <DataAnnotationsValidator />
-  <p>Enter a link and press enter</p>
-  <InputText class="input is-large is-size-2" @bind-Value="Model!.Url" id="newLink" placeholder="http://example.com"
-    ParsingErrorMessage="That doesn't look like a valid URL" />
-  <ValidationMessage class="has-text-danger is-font-weight-medium mt-2" For="() => Model.Url" />
-</EditForm>
+<div>
+  <EditForm Model="@Model" OnValidSumit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <p>Enter a link and press enter</p>
+    <InputText class="input is-large is-size-2" @bind-Value="Model!.Url" id="newLink" placeholder="http://example.com"
+      ParsingErrorMessage="That doesn't look like a valid URL" />
+    <ValidationMessage class="has-text-danger is-font-weight-medium mt-1" For="() => Model.Url" />
+  </EditForm>
+</div>
 
 @code {
   public Link? Model { get; set; }
@@ -15,6 +18,7 @@
 
   private void OnValidSubmit()
   {
-    Console.WriteLine("Submit");
+    // redirect to the edit page
+    NavigationManager.NavigateTo($"/edit/{Model!.Url}");
   }
 }
