@@ -4,7 +4,7 @@
 <div>
   <EditForm Model="@Model" OnValidSumit="@OnValidSubmit">
     <DataAnnotationsValidator />
-    <p>Enter a link and press enter</p>
+    <p class="mb-0">Enter a link and press enter</p>
     <InputText class="input is-large is-size-2" @bind-Value="Model!.Url" id="newLink" placeholder="http://example.com"
       ParsingErrorMessage="That doesn't look like a valid URL" />
     <ValidationMessage class="has-text-danger is-font-weight-medium mt-1" For="() => Model.Url" />
