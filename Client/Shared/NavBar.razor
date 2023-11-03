@@ -2,22 +2,10 @@
   <nav class="navbar container" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
-        <img
-          width="100"
-          height="60"
-          src="/images/logo-beta.svg"
-          alt="urlist logo"
-        />
+        <img width="100" height="60" src="/images/logo-beta.svg" alt="urlist logo" />
       </a>
-      <a
-        id="hamburger"
-        role="button"
-        class="beta-bump navbar-burger burger @(showMenu ? "is-active" : "")"
-        aria-label="menu"
-        aria-expanded="false"
-        data-target="navbarBasicExample"
-        @onclick="@toggleMenu"
-      >
+      <a id="hamburger" role="button" class="beta-bump navbar-burger burger @(showMenu ? "is-active" : "")"
+        aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" @onclick="@toggleMenu">
         <img src="images/burger.svg" alt="toggle menu" width="60" height="60" />
       </a>
     </div>
@@ -29,11 +17,7 @@
           </span>
           New
         </a>
-        <router-link
-          v-if="currentUser.loggedIn"
-          class="navbar-item"
-          to="/s/user"
-        >
+        <router-link v-if="currentUser.loggedIn" class="navbar-item" to="/s/user">
           <span class="icon is-large navbar-icon">
             <i class="fas fa-lg fa-user-circle"></i>
           </span>
@@ -48,10 +32,7 @@
       </div>
 
       <div class="navbar-end">
-        <div
-          class="navbar-item has-dropdown is-hoverable"
-          v-if="currentUser.loggedIn"
-        >
+        <div class="navbar-item has-dropdown is-hoverable" v-if="currentUser.loggedIn">
           <a class="navbar-link">
             <div class="columns is-gapless is-mobile">
               <div class="column is-narrow">
@@ -73,7 +54,7 @@
             </a>
           </div>
         </div>
-        <a v-else class="navbar-item" @click.prevent="showLoginModal = true">
+        <a class="navbar-item" @onclick="(() => IsOpenChanged(true))">
           <span class="icon is-large navbar-icon">
             <i class="fas fa-lg fa-sign-in-alt"></i>
           </span>
@@ -82,15 +63,21 @@
       </div>
     </div>
   </nav>
-    @* <modal-login :isActive="showLoginModal" @close="showLoginModal = false"
-  ></modal-login> *@
+  <ModalLogin isOpen="showLoginModal" IsOpenChanged="IsOpenChanged"></ModalLogin>
 </header>
 
 @code {
-    private bool showMenu = false; 
-    private void toggleMenu()
-    { 
-      showMenu = !showMenu;
-      Console.WriteLine("showMenu: " + showMenu);
-    }
-} 
+  private bool showLoginModal = false;
+  private bool showMenu = false;
+
+  public async void IsOpenChanged(bool isOpen)
+  {
+    showLoginModal = isOpen;
+  }
+
+  private void toggleMenu()
+  {
+    showMenu = !showMenu;
+    Console.WriteLine("showMenu: " + showMenu);
+  }
+}

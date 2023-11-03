@@ -1,0 +1,48 @@
+﻿<div class="modal @((isOpen) ? "is-active" : "")">
+  <div class="modal-background" @click="$emit('close')"></div>
+  <div class="modal-content">
+    <div class="card modal-content-inner">
+      <a class="flex is-pulled-right" href="#" @onclick="CloseModal">
+        <img src="../assets/close.png" />
+      </a>
+      <div class="card-content">
+        <div class="columns is-gapless is-vcentered is-relative is-mobile">
+          <div class="column">
+            <h1 class="is-size-4 has-text-weight-medium is-pulled-right">
+              Sign in to&nbsp;
+            </h1>
+          </div>
+          <div class="column">
+            <img width="100" class="is-pulled-left" src="../assets/logo.svg" />
+          </div>
+        </div>
+        <a id="twitterButton" href="/.auth/login/twitter" class="button is-large is-fullwidth has-text-white">
+          <span>
+            <i id="twitterIcon" class="fab fa-twitter twitter-icon icon"></i>
+            <span class="is-size-5 has-text-weight-medium">with Twitter</span>
+          </span>
+        </a>
+        <a id="facebookButton" href="/.auth/login/facebook" class="button is-large is-fullwidth has-text-white">
+          <span>
+            <i id="facebookIcon" class="fab fa-facebook facebook-icon icon"></i>
+            <span class="is-size-5 has-text-weight-medium">with Facebook</span>
+          </span>
+        </a>
+        <br />
+      </div>
+    </div>
+  </div>
+</div>
+
+@code {
+  [Parameter]
+  public bool isOpen { get; set; }
+
+  [Parameter]
+  public EventCallback<bool> IsOpenChanged { get; set; }
+
+  private async void CloseModal()
+  {
+    await IsOpenChanged.InvokeAsync(false);
+  }
+}
