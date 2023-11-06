@@ -54,7 +54,7 @@
             </a>
           </div>
         </div>
-        <a class="navbar-item" @onclick="(() => IsOpenChanged(true))">
+        <a class="navbar-item" @onclick="(() => toggleModal(true))">
           <span class="icon is-large navbar-icon">
             <i class="fas fa-lg fa-sign-in-alt"></i>
           </span>
@@ -63,14 +63,14 @@
       </div>
     </div>
   </nav>
-  <ModalLogin isOpen="showLoginModal" IsOpenChanged="IsOpenChanged"></ModalLogin>
+  <ModalLogin isOpen="showLoginModal" toggleModal="toggleModal"></ModalLogin>
 </header>
 
 @code {
   private bool showLoginModal = false;
   private bool showMenu = false;
 
-  public async void IsOpenChanged(bool isOpen)
+  public async void toggleModal(bool isOpen)
   {
     showLoginModal = isOpen;
   }

@@ -9,3 +9,23 @@
 .icon {
   margin-right: 8px;
 }
+
+.modal {
+  padding: 20px;
+}
+
+.modal-content {
+  min-width: 300px;
+  max-width: 500px;
+  background-color: white;
+  box-shadow: 0 20px 60px -2px rgba(27, 33, 58, 0.4);
+}
+
+.modal-content-inner {
+  padding: 20px;
+  text-align: center;
+}
+
+.modal-background {
+  opacity: 0.3;
+}
