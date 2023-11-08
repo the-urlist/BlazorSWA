@@ -20,6 +20,11 @@
     GetUser();
   }
 
+
+  /// <summary>
+  /// This method is used to get the current user's information and store it in the StateContainer.
+  /// If the user is not logged in, it simply returns.
+  /// </summary>
   private async void GetUser()
   {
     var response = await Http.GetAsync("/.auth/me");
