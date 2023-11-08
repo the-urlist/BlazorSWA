@@ -1,8 +1,50 @@
 ﻿@inherits LayoutComponentBase
 
+@using BlazorApp.Shared
+
+@inject HttpClient Http
+@inject StateContainer StateContainer
+
 <div class="page">
-  <NavBar></NavBar>
-    @Body
+  <NavBar loggedIn="loggedIn"></NavBar>
+  @Body
 </div>
 
+@code {
 
+  private bool loggedIn = false;
+
+  protected override async Task OnInitializedAsync()
+  {
+    await base.OnInitializedAsync();
+    GetUser();
+  }
+
+  private async void GetUser()
+  {
+    var response = await Http.GetAsync("/.auth/me");
+    if (response.IsSuccessStatusCode)
+    {
+      var principal = new ClientPrincipal();
+      var json = await response.Content.ReadAsStringAsync();
+
+      var principalWrapper = System.Text.Json.JsonSerializer.Deserialize<ClientPrincipalWrapper>(json, new
+      System.Text.Json.JsonSerializerOptions
+        {
+          PropertyNameCaseInsensitive = true
+        });
+
+      // if the client principal on the wrapper is null, the user is not logged in
+      if (principalWrapper.ClientPrincipal == null)
+      {
+        return;
+      }
+
+      StateContainer.User.ClientPrincipal = principalWrapper.ClientPrincipal;
+
+      loggedIn = true;
+
+      StateHasChanged();
+    };
+  }
+}

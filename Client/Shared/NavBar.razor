@@ -1,3 +1,8 @@
+@using BlazorApp.Shared
+
+@inject HttpClient Http
+@inject StateContainer StateContainer
+
 <header id="navbar" class="header">
   <nav class="navbar container" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
@@ -5,7 +10,7 @@
         <img width="100" height="60" src="/images/logo-beta.svg" alt="urlist logo" />
       </a>
       <a id="hamburger" role="button" class="beta-bump navbar-burger burger @(showMenu ? "is-active" : "")"
-        aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" @onclick="@toggleMenu">
+        aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" @onclick="@ToggleMenu">
         <img src="images/burger.svg" alt="toggle menu" width="60" height="60" />
       </a>
     </div>
@@ -17,12 +22,15 @@
           </span>
           New
         </a>
-        <router-link v-if="currentUser.loggedIn" class="navbar-item" to="/s/user">
-          <span class="icon is-large navbar-icon">
-            <i class="fas fa-lg fa-user-circle"></i>
-          </span>
-          My Lists
-        </router-link>
+        @if (loggedIn)
+        {
+          <router-link v-if="currentUser.loggedIn" class="navbar-item" to="/s/user">
+            <span class="icon is-large navbar-icon">
+              <i class="fas fa-lg fa-user-circle"></i>
+            </span>
+            My Lists
+          </router-link>
+        }
         <a href="https://aka.ms/theurlist" class="navbar-item" target="_new">
           <span class="icon is-large navbar-icon">
             <i class="fas fa-lg fa-question-circle"></i>
@@ -30,54 +38,62 @@
           About
         </a>
       </div>
-
       <div class="navbar-end">
-        <div class="navbar-item has-dropdown is-hoverable" v-if="currentUser.loggedIn">
-          <a class="navbar-link">
-            <div class="columns is-gapless is-mobile">
-              <div class="column is-narrow">
-                <figure id="profileImage" class="image">
-                  <img class="is-rounded" :src="currentUser.profileImage" alt />
-                </figure>
+        @if (loggedIn)
+        {
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              <div class="columns is-gapless is-mobile">
+                <div class="column is-narrow">
+                  <figure id="profileImage" class="image">
+                    <img class="is-rounded" :src="currentUser.profileImage" alt />
+                  </figure>
+                </div>
+                <div class="column">
+                  <span class="icon is-large">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </div>
               </div>
-              <div class="column">
-                <span>TODO: Username</span>
-              </div>
-            </div>
-          </a>
-          <div class="navbar-dropdown">
-            <a class="navbar-item" :href="logoutUrl">
-              <span class="icon is-medium navbar-icon">
-                <i class="fas fa-sign-out-alt"></i>
-              </span>
-              Log Out
             </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="@($"/.auth/logout")">
+                <span class="icon is-medium navbar-icon">
+                  <i class="fas fa-sign-out-alt"></i>
+                </span>
+                Log Out
+              </a>
+            </div>
           </div>
-        </div>
-        <a class="navbar-item" @onclick="(() => toggleModal(true))">
-          <span class="icon is-large navbar-icon">
-            <i class="fas fa-lg fa-sign-in-alt"></i>
-          </span>
-          Login
-        </a>
+        }
+        else
+        {
+          <a class="navbar-item" @onclick="ToggleModal">
+            <span class="icon is-large navbar-icon">
+              <i class="fas fa-lg fa-sign-in-alt"></i>
+            </span>
+            Login
+          </a>
+        }
       </div>
     </div>
   </nav>
-  <ModalLogin isOpen="showLoginModal" toggleModal="toggleModal"></ModalLogin>
+  <ModalLogin isOpen="showLoginModal" closeModal="ToggleModal"></ModalLogin>
 </header>
 
 @code {
+  [Parameter]
+  public bool loggedIn { get; set; }
+
   private bool showLoginModal = false;
   private bool showMenu = false;
-
-  public async void toggleModal(bool isOpen)
+  public void ToggleModal()
   {
-    showLoginModal = isOpen;
+    showLoginModal = !showLoginModal;
   }
 
-  private void toggleMenu()
+  private void ToggleMenu()
   {
     showMenu = !showMenu;
-    Console.WriteLine("showMenu: " + showMenu);
   }
 }

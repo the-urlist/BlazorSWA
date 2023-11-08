@@ -1,4 +1,6 @@
-﻿<div class="modal @((isOpen) ? "is-active" : "")">
+﻿@inject NavigationManager NavigationManager
+
+<div class="modal @((isOpen) ? "is-active" : "")">
   <div class="modal-background" @onclick="CloseModal"></div>
   <div class="modal-content">
     <div class="card modal-content-inner">
@@ -16,7 +18,8 @@
             <img width="100" class="is-pulled-left" src="/images/logo.svg" />
           </div>
         </div>
-        <a id="twitterButton" href="/.auth/login/twitter" class="button is-large is-fullwidth has-text-white">
+        <a id="twitterButton" href="@($"/.auth/login/twitter?post_login_redirect_uri={currentUrl}")" class="button
+        is-large is-fullwidth has-text-white">
           <span>
             <i id="twitterIcon" class="fab fa-twitter twitter-icon icon"></i>
             <span class="is-size-5 has-text-weight-medium">with Twitter</span>
@@ -39,10 +42,18 @@
   public bool isOpen { get; set; }
 
   [Parameter]
-  public EventCallback<bool> toggleModal { get; set; }
+  public EventCallback<bool> closeModal { get; set; }
+
+
+  private string currentUrl;
+
+  protected override void OnInitialized()
+  {
+    currentUrl = NavigationManager.Uri;
+  }
 
   private async void CloseModal()
   {
-    await toggleModal.InvokeAsync(false);
+    await closeModal.InvokeAsync();
   }
 }

@@ -14,14 +14,14 @@ public class StateContainer
     }
   }
 
-  private bool appIsBusy { get; set; }
+  private User user = new User();
 
-  public bool AppIsBusy
+  public User User
   {
-    get => appIsBusy;
+    get => user ??= new User();
     set
     {
-      appIsBusy = value;
+      user = value;
       NotifyStateChanged();
     }
   }
