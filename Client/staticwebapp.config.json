@@ -1,5 +1,15 @@
 {
+    "routes": [
+        {
+            "route": "/",
+            "rewrite": "blazor.html"
+        },
+        {
+            "route": "/s/*",
+            "rewrite": "blazor.html"
+        }
+    ],
     "navigationFallback": {
-        "rewrite": "/index.html"
+        "rewrite": "index.html"
     }
 }

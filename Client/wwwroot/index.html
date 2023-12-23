@@ -2,26 +2,136 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Azure Static Web Apps Blazor Sample</title>
-  <base href="/" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/bulma/css/bulma.min.css" />
   <link href="css/app.css" rel="stylesheet" />
-  <link href="Client.styles.css" rel="stylesheet" />
+  <title>The Urlist</title>
 </head>
 
 <body>
-  <div id="app">Loading...</div>
+  <header id="navbar" class="header">
+    <nav class="navbar container" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+          <img width="100" height="60" src="/images/logo-beta.svg" alt="urlist logo" />
+        </a>
+      </div>
+    </nav>
+  </header>
+  <div class="container" id="page">
+    <template id="template">
+      <div class="section">
+        <div>
+          <h2 class="is-size-3 is-heading has-text-weight-medium has-text-primary">{{description}}</h2>
+          <div class="columns is-mobile">
+            <div class="column is-half">
+              <div id="share" class="buttons has-addons">
+                <a class="button" target="_blank"
+                  href="https://twitter.com/intent/tweet?text={{description}} theurlist.com/{{vanityUrl}}">
+                  <span class="icon"><i class="fab fa-twitter"></i></span>
+                </a>
+                <a class="button" target="_blank"
+                  href="https://www.facebook.com/sharer/sharer.php?u=theurlist.com/{{vanityUrl}}">
+                  <span class="icon"><i class="fab fa-facebook-f"></i></span>
+                </a>
+                <a class="button" target="_blank"
+                  href="https://www.linkedin.com/shareArticle?mini=true?summary={{vanityUrl}}&url=https://theurlist.com?{{vanityUrl}}&title={{vanityUrl}}">
+                  <span class=" icon"><i class="fab fa-linkedin-in"></i></span>
+                </a>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div id="view" class="buttons has-addons is-pulled-right">
+              </div>
+              {{description}}
+            </div>
+          </div>
+          <br />
+          {{#links}}
+          <a href="{{Url}}">
+            <div class="link-outer">
+              <div class="link-wrapper">
+                <div class="columns is-vcentered is-mobile">
+                  <div class="card link">
+                    <div class="column">
+                      <div class="columns is-vcentered">
+                        <div class="column is-narrow is-hidden-mobile">
+                          <figure class="link-image">
+                            {{ #Image }}
+                            <img width="64" height="64" class="is-64x64" src="{{ Image }}" alt=" {{ Title }}">
+                            {{ /Image }}
+                            {{ ^Image }}
+                            <img width="64" height="64" src="images/no-image.png" alt="{{Title}}"> {{ /Image }}
+                          </figure>
+                        </div>
+                        <div class="column link-details">
+                          <div class="columns is-mobile is-multiline is-gapless">
+                            <div class="column is-narrow is-hidden-tablet">
+                              <figure class="link-image link-image-little">
+                                {{ #Image }}
+                                <img width="24" height="24" class="is-24x24" src="{{ Image }}" alt=" {{ Title }}">
+                                {{ /Image }}
+                                {{ ^Image }}
+                                <img width="28" height="28" class="is-24x24" src="images/no-image.png"
+                                  alt="{{Title}}" />
+                                {{ /Image }}
+                              </figure>
+                            </div>
+                            <div class="column">
+                              <p class="has-text-weight-bold link-title has-text-weight-medium">{{ Title }}</p>
+                            </div>
+                            <div class="column is-full">
+                              <p class="link-description has-fixed-size is-size-7">
+                                {{ Description }}
+                              </p>
+                              <p disabled="disabled" class="link-url">{{ Url }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+          {{/links}}
+        </div>
+        <div class="has-text-centered" v-else>
 
-  <div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
+        </div>
+      </div>
+    </template>
   </div>
-  <script src="_framework/blazor.webassembly.js"></script>
-  <script src="js/sortable.min.js"></script>
-  <script src="js/main.js"></script>
+  <script src="https://unpkg.com/mustache@latest"></script>
+  <script>
+    async function getLinks() {
+      // get the fragment of the url after the base
+      const vanityUrl = window.location.pathname;
+
+      const response = await fetch(`/api/links/${vanityUrl}`);
+      const links = await response.json();
+      return links;
+    }
+
+    async function main() {
+
+      const linkBundle = await getLinks();
+
+      // update the page title with the vanity url
+      document.title = `The Urlist - ${linkBundle.vanityUrl}`;
+
+
+      // parse the links with moustache
+      const template = document.getElementById('template').innerHTML;
+      const rendered = Mustache.render(template, linkBundle);
+      document.getElementById('page').innerHTML = rendered;
+    }
+
+    main();
+  </script>
 </body>
+
 
 </html>

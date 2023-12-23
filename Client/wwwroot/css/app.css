@@ -290,3 +290,30 @@ a {
 .blazor-error-boundary::after {
     content: "An error has occurred."
 }
+
+.beta-bump {
+    margin-top: 20px;
+}
+
+#navbar {
+    top: 0;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 5px 40px 1px #e8e8e8;
+    padding-bottom: 20px;
+}
+
+#navbar a.navbar-item {
+    color: #71777e;
+}
+
+#navbar a.navbar-item img {
+    max-height: inherit;
+}
+
+#navbar a.navbar-item:hover,
+#navbar a.navbar-item:focus,
+#navbar a.navbar-item:focus-within {
+    background-color: inherit;
+    color: inherit;
+}
