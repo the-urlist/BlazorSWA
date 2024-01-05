@@ -1,0 +1,44 @@
+#userHeader {
+  margin: 40px 0px;
+}
+
+.lists {
+  margin: 0px 20px;
+}
+
+.list .list-dots {
+  top: -20px;
+  right: -10px;
+}
+
+.list .list-title {
+  padding: 10px 0px;
+}
+
+.list .list-count {
+  position: absolute;
+  margin-left: 20px;
+  margin-top: -15px;
+}
+
+.list .list-item {
+  margin-bottom: 20px;
+  height: 195px;
+  cursor: pointer;
+}
+
+.list .list-item .list-item-content {
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.list .list-placeholder {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  border-style: dashed;
+  border-color: #979797;
+  border-width: 2px;
+}

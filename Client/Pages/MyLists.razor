@@ -1,0 +1,77 @@
+@page "/s/mylists"
+
+@using BlazorApp.Shared
+
+@inject StateContainer StateContainer
+@inject NavigationManager NavigationManager
+@inject HttpContainer HttpContainer
+
+<div class="container">
+  <div class="lists">
+    <h2 class="is-size-3 is-heading has-text-primary has-text-weight-medium">
+      My Lists
+    </h2>
+    <div class="columns is-multiline list">
+      <div class="column is-one-quarter-widescreen is-one-third-desktop is-half-tablet">
+        <div class="list-item" @onclick="NewList">
+          <div class="list-placeholder has-text-centered">
+            <div class="column has-text-weight-medium">
+              <div>+</div>
+              <span>Create new list</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      @if (StateContainer.User?.LinkBundles != null)
+      {
+        @foreach (var linkBundle in StateContainer.User.LinkBundles)
+        {
+          <div class="column is-one-quarter-widescreen is-one-third-desktop is-half-tablet">
+            <img src="../assets/bg.png" alt class="list-dots is-pulled-right is-relative" />
+            <div class="card list-item is-relative" @onclick="EditList">
+              <span class="list-count tag is-primary is-size-6 has-text-weight-bold">
+                @linkBundle.Links.Count Links
+              </span>
+              <div class="list-item-content">
+                <div class="card-content list-item-content-details">
+                  <h3 class="is-block list-title is-size-5 has-text-weight-medium">
+                    @linkBundle.VanityUrl
+                  </h3>
+                  <p class="is-size-6">@linkBundle.Description</p>
+                  <p></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
+
+@code {
+  protected override async Task OnInitializedAsync()
+  {
+    var linkBundles = await GetLinkBundlesForUser();
+    if (StateContainer.User != null)
+    {
+      StateContainer.User.LinkBundles = linkBundles;
+    }
+  }
+
+  private async Task<List<LinkBundle>> GetLinkBundlesForUser() {
+    var response = await HttpContainer.GetAsync<List<LinkBundle>>($"api/user");
+    return response.Data ?? new List<LinkBundle>();
+  }
+  
+  private void NewList()
+  {
+    NavigationManager.NavigateTo("/s/edit");
+  }
+
+  private void EditList()
+  {
+    NavigationManager.NavigateTo("/s/edit");
+  }
+
+}
