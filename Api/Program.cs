@@ -11,7 +11,7 @@ namespace ApiIsolated
 {
     public class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
             // Setup custom serializer to use System.Text.Json
             JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
@@ -36,7 +36,7 @@ namespace ApiIsolated
                 .ConfigureFunctionsWorkerDefaults()
                 .Build();
 
-            host.Run();
+            await host.RunAsync();
         }
     }
 }
