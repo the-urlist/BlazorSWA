@@ -17,5 +17,7 @@ public class ClientPrincipal
 
   [JsonPropertyName("userDetails")]
   public string UserDetails { get; set; }
+
+  public List<Claim> Claims { get; set; } = new List<Claim>();
 }
 

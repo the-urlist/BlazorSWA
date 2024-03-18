@@ -1,5 +1,6 @@
 #twitterButton {
-  background-color: #1cabe9;
+  color: #1cabe9;
+  cursor: pointer;
 }
 
 #facebookButton {

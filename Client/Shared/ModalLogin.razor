@@ -10,44 +10,46 @@
     <div class="column">
       <img width="100" class="is-pulled-left ml-2" src="/images/logo.svg" />
     </div>
-  </div>
-  <a id="twitterButton" href="@($"/.auth/login/twitter?post_login_redirect_uri={currentUrl}")" class="button
-          is-large is-fullwidth has-text-white">
-    <span>
-      <i id="twitterIcon" class="fab fa-twitter twitter-icon icon"></i>
-      <span class="is-size-5 has-text-weight-medium">with Twitter</span>
-    </span>
-  </a>
-  <br />
-  <a id="facebookButton" href="@($"/.auth/login/facebook?post_login_redirect_uri={currentUrl}")"
-    class="button is-large is-fullwidth has-text-white">
-    <span>
-      <i id="facebookIcon" class="fab fa-facebook icon"></i>
-      <span class="is-size-5 has-text-weight-medium">with Facebook</span>
-    </span>
-  </a>
-  <br />
-  <a id="githubButton" href="@($"/.auth/login/github?post_login_redirect_uri={currentUrl}")"
-    class="button is-large is-fullwidth has-text-white">
-    <span>
-      <i id="githubIcon" class="fab fa-github icon"></i>
-      <span class="is-size-5 has-text-weight-medium">with GitHub</span>
-    </span>
-  </a>
-  <br />
-  <a id="googleButton" href="@($"/.auth/login/google?post_login_redirect_uri={currentUrl}")"
-    class="button is-large is-fullwidth has-text-white">
-    <span>
-      <i id="googleIcon" class="fab fa-google icon"></i>
-      <span class="is-size-5 has-text-weight-medium">with Google</span>
-    </span>
-  </a>
+  </div>                
+    <a id="facebookButton" href="@($"/.auth/login/facebook?post_login_redirect_uri={currentUrl}")"
+      class="button is-large is-fullwidth has-text-white">
+      <span>
+        <i id="facebookIcon" class="fab fa-facebook icon"></i>
+        <span class="is-size-5 has-text-weight-medium">with Facebook</span>
+      </span>
+    </a>
+    <br />
+    <a id="githubButton" href="@($"/.auth/login/github?post_login_redirect_uri={currentUrl}")"
+      class="button is-large is-fullwidth has-text-white">
+      <span>
+        <i id="githubIcon" class="fab fa-github icon"></i>
+        <span class="is-size-5 has-text-weight-medium">with GitHub</span>
+      </span>
+    </a>
+    <br />
+    <a id="googleButton" href="@($"/.auth/login/google?post_login_redirect_uri={currentUrl}")"
+      class="button is-large is-fullwidth has-text-white">
+      <span>
+        <i id="googleIcon" class="fab fa-google icon"></i>
+        <span class="is-size-5 has-text-weight-medium">with Google</span>
+      </span>
+    </a>
+    <br />
+    <details>
+      <summary id="twitterButton">Where is Twitter Login?</summary>
+        <p class="is-size-6">
+          We had to remove Twitter login due to changes in the X API. But don't worry - you can import any existing lists from Twitter on the My Lists page.
+        </p>
+    </details>
+
 </ModalWindow>
 
 @code {
   ModalWindow? modal;
 
   private string? currentUrl;
+
+  private bool showTwitterMigrationMessage = false;
 
   public void Show()
   {

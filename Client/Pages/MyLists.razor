@@ -21,7 +21,15 @@
     }
     else
     {
-      <h2 class="is-size-3 is-heading has-text-primary has-text-weight-medium">My Lists</h2>
+      <div class="columns is-vcentered">
+        <div class="column">
+          <h2 class="is-size-3 is-heading has-text-primary has-text-weight-medium">My Lists</h2>
+        </div>
+        <div class="column has-text-right">
+          <button class="button is-primary" @onclick="ShowImportModal">Import</button>
+        </div>
+      </div>
+
     }
     <div class="columns is-multiline list">
       <div class="column is-one-quarter-widescreen is-one-third-desktop is-half-tablet">
@@ -61,10 +69,13 @@
     </div>
   </div>
 </div>
+<ModalImport @ref="modalImport"></ModalImport>
 
 @code {
 
   private bool LoadingUsersLists { get; set; } = false;
+
+  private ModalImport? modalImport;
 
   protected override async Task OnInitializedAsync()
   {
@@ -105,5 +116,10 @@
   {
     StateContainer.LinkBundle = linkBundle;
     NavigationManager.NavigateTo("/s/edit");
+  }
+
+  private void ShowImportModal()
+  {
+    modalImport?.Show();
   }
 }

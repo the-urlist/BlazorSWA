@@ -47,12 +47,12 @@
             <a class="navbar-link">
               <div class="columns is-gapless is-mobile is-vcentered">
                 <div class="column is-narrow">
-                  <span class="icon is-large" title="@StateContainer.User?.ClientPrincipal?.UserDetails">
-                    <i class="@($"is-size-4 fab fa-{StateContainer.User?.ClientPrincipal?.IdentityProvider}")"></i>
-                  </span>
+                  <figure id="profileImage" class="image">
+                    <img class="is-rounded" src="@StateContainer.User?.UserImage" alt />
+                  </figure>
                 </div>
-                <div class="column">
-                  <span>@StateContainer.User?.ClientPrincipal?.UserDetails</span>
+                <div class="column ml-2">
+                  <span>@StateContainer.User?.UserName</span>
                 </div>
               </div>
             </a>
