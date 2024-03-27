@@ -1,5 +1,7 @@
 # The Urlist - Blazor Static Web App rewrite
 
+[![BuiltWithDot.Net shield](https://builtwithdot.net/project/391/the-urlist-blazor/badge)](https://builtwithdot.net/project/391/the-urlist-blazor)
+
 The Urlist is an application that lets you create lists of url’s that you can share with others. Get it? A list of URL’s? The Urlist? Listen, naming things is hard and all the good domains are already taken.
 
 The original version of this site was [built in 2019 using Azure Storage, Azure Functions, Azure Front Door, and Vue](https://dev.to/azure/the-urlist-an-application-study-in-serverless-and-azure-2jk1). We originally decided to try a rewrite of this using modern Static Web Apps and Blazor when Twitter authentication became unreliable, trying this in Blazor because it's a new fun challenge. You can [watch us](https://aka.ms/burke-learns-blazor) live stream the effort on Fridays.
