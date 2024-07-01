@@ -4,6 +4,7 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,7 +21,10 @@ namespace Api.Functions
         {
             ClientPrincipal principal = ClientPrincipalUtility.GetClientPrincipal(req);
 
-            var container = cosmosClient.GetContainer("TheUrlist", "linkbundles");
+            var databaseName = Environment.GetEnvironmentVariable("CosmosDb__Database");
+            var collectionName = Environment.GetEnvironmentVariable("CosmosDb__Collection");
+
+            var container = cosmosClient.GetContainer(databaseName, collectionName);
 
             // get the document id where vanityUrl == vanityUrl
             var query = new QueryDefinition("SELECT TOP 1 * FROM c WHERE c.vanityUrl = @vanityUrl")

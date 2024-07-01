@@ -49,7 +49,10 @@ namespace Api.Functions
 
             try
             {
-                var container = cosmosClient.GetContainer("the-urlist", "linkbundles");
+                var databaseName = Environment.GetEnvironmentVariable("CosmosDb__Database");
+                var collectionName = Environment.GetEnvironmentVariable("CosmosDb__Collection");
+
+                var container = cosmosClient.GetContainer(databaseName, collectionName);
 
                 string vanityUrl = linkBundle.VanityUrl;
                 var query = new QueryDefinition("SELECT TOP 1 * FROM c WHERE c.vanityUrl = @vanityUrl").WithParameter("@vanityUrl", vanityUrl);

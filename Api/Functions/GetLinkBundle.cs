@@ -24,8 +24,10 @@ namespace Api.Functions
                 return await req.CreateJsonResponse(HttpStatusCode.BadRequest, "vanityUrl is required");
             }
 
-            var database = _cosmosClient.GetDatabase("the-urlist");
-            var container = database.GetContainer("linkbundles");
+            var databaseName = Environment.GetEnvironmentVariable("CosmosDb__Database");
+            var collectionName = Environment.GetEnvironmentVariable("CosmosDb__Collection");
+
+            var container = cosmosClient.GetContainer(databaseName, collectionName);
 
             var query = new QueryDefinition("SELECT TOP 1 * FROM c WHERE c.vanityUrl = @vanityUrl")
                             .WithParameter("@vanityUrl", vanityUrl);
