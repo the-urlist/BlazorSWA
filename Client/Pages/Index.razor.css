@@ -4,6 +4,10 @@
   width: 100%;
 }
 
+.main-background {
+  background-color: var(--main-background);
+}
+
 #getStarted {
   overflow: hidden;
   position: relative;
@@ -28,5 +32,5 @@
   width: 150%;
   border-top-left-radius: 50%;
   border-top-right-radius: 50%;
-  background-color: #f9fafc;
+  background-color: var(--home-bottom-background);
 }

@@ -1,9 +1,39 @@
-﻿@import url("https://use.fontawesome.com/releases/v5.6.3/css/all.css");
+﻿@import url("bulma/bulma.css");
+@import url("https://use.fontawesome.com/releases/v5.6.3/css/all.css");
+
 
 :root {
     --primary: #20ae96;
     --danger: #d9255e;
+    --text-color: #222c38;
+    --home-bottom-background: #f9fafc;
+    --main-background: #fff;
+    --drop-shadow: 0 5px 40px 1px #e8e8e8;
 }
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-color: #fff;
+        --home-bottom-background: #353638;
+        --main-background: #14161a;
+        --drop-shadow: 0 5px 40px 1px #292727;
+    }
+    #logo-img {
+        content: url("/images/logo-dark.svg");
+    }
+}
+
+[data-theme=dark], .theme-dark {
+    --text-color: #fff;
+    --home-bottom-background: #353638;
+    --main-background: #14161a;
+    --drop-shadow: 0 5px 40px 1px #292727;
+}
+
+[data-theme=dark] #logo-img, .theme-dark #logo-img {
+    content: url("/images/logo-dark.svg");
+} 
+
 
 .beta-bump {
     margin-top: 10px;
@@ -14,14 +44,14 @@ body {
     height: 100%;
     text-rendering: auto;
     text-size-adjust: 100%;
-    background-color: #f9fafc;
 }
 
 body {
     padding: 0;
     margin: 0;
     font-family: "Roboto", sans-serif;
-    color: #222c38;
+    background-color: var(--home-bottom-background);
+    color: var(--text-color);
     font-size: 18px;
 }
 
@@ -88,14 +118,14 @@ a {
 .header {
     top: 0;
     width: 100%;
-    background: #fff;
-    -webkit-box-shadow: 0 5px 40px 1px #e8e8e8;
-    box-shadow: 0 5px 40px 1px #e8e8e8;
+    background: var(--main-background);
+    -webkit-box-shadow: var(--drop-shadow);
+    box-shadow: var(--drop-shadow);
 }
 
 .card {
     border-radius: 4px;
-    box-shadow: 0 5px 40px 1px #e8e8e8;
+    box-shadow: var(--drop-shadow);
 }
 
 .content {
@@ -181,7 +211,6 @@ a {
 }
 
 .link .link-url:disabled {
-    background-color: white;
     color: black;
 }
 
@@ -277,37 +306,36 @@ a {
     margin-top: 5px;
 }
 
-    @keyframes typing {
-      0% {
+@keyframes typing {
+    0% {
         opacity: 0;
-      }
+    }
 
-      50% {
+    50% {
         opacity: 1;
-      }
+    }
 
-      100% {
+    100% {
         opacity: 0;
-      }
     }
+}
 
-    .dot {
-      display: inline-block;
-      height: 10px;
-      width: 10px;
-      background-color: #20ae96;
-      border-radius: 50%;
-      margin: 0 2px;
-      animation: typing 1.5s infinite;
-    }
+.dot {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: typing 1.5s infinite;
+}
 
-    .dot:nth-child(2) {
-      animation-delay: 0.5s;
-    }
+.dot:nth-child(2) {
+    animation-delay: 0.5s;
+}
 
-    .dot:nth-child(3) {
-      animation-delay: 1s;
-    }
+.dot:nth-child(3) {
+    animation-delay: 1s;
+}
 
 
 #blazor-error-ui {
@@ -347,19 +375,19 @@ a {
     margin: 20vh auto 1rem auto;
 }
 
-    .loading-progress circle {
-        fill: none;
-        stroke: #e0e0e0;
-        stroke-width: 0.6rem;
-        transform-origin: 50% 50%;
-        transform: rotate(-90deg);
-    }
+.loading-progress circle {
+    fill: none;
+    stroke: #e0e0e0;
+    stroke-width: 0.6rem;
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+}
 
-        .loading-progress circle:last-child {
-            stroke: #1b6ec2;
-            stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
-            transition: stroke-dasharray 0.05s ease-in-out;
-        }
+.loading-progress circle:last-child {
+    stroke: #1b6ec2;
+    stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+    transition: stroke-dasharray 0.05s ease-in-out;
+}
 
 .loading-progress-text {
     position: absolute;
@@ -368,9 +396,9 @@ a {
     inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
 }
 
-    .loading-progress-text:after {
-        content: var(--blazor-load-percentage-text, "Loading");
-    }
+.loading-progress-text:after {
+    content: var(--blazor-load-percentage-text, "Loading");
+}
 
 code {
     color: #c02d76;
