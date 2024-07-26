@@ -46,66 +46,83 @@
 
 @code {
 
-    protected override void OnInitialized()
+  protected override void OnInitialized()
+  {
+    StateContainer.OnChange += StateHasChanged;
+  }
+
+  [Parameter]
+  public bool IsPublished { get; set; } = false;
+  private Debouncer debouncer = new Debouncer();
+  private bool listIsValid = true;
+  private string validationErrorMessage = "";
+  private string validationErrorClass => listIsValid ? "" : "invalid";
+  private string validationMessageClass => listIsValid ? "is-invisible" : "is-visible";
+
+  bool PublishEnabled(bool valid)
+  {
+    if (valid && StateContainer.LinkBundle.Links.Count > 0) return true;
+    return false;
+  }
+
+  private void ValidateVanityUrl(ChangeEventArgs e)
+  {
+    var vanityUrl = e.Value?.ToString();
+    StateContainer.LinkBundle.VanityUrl = vanityUrl;
+
+    debouncer.Debounce(500, async () => {
+
+      if (String.IsNullOrEmpty(vanityUrl)) {
+        SetValidationState(true, "");
+        return;
+      }
+
+      // Ensure the vanity url contains only letters, numbers, and dashes without using regex
+      if (vanityUrl.Any(c => !char.IsLetterOrDigit(c) && c != '-'))
+      {
+        // if the data annotations validation fails, no need to check if the vanity url is taken
+        SetValidationState(false, "Vanity URLs can only contain letters, numbers, and dashes.");
+        return;
+      }
+
+      // the characters are valid, so now check to see if the vanity url is already in use
+      var vanityIsTaken = await VanityUrlIsTaken(vanityUrl);
+
+      if (vanityIsTaken) {
+        SetValidationState(false, "This vanity URL is already in use. Please choose another.");
+        return;
+      }
+
+      SetValidationState(true, "");
+    });
+  }
+
+  private void SetValidationState(bool isValid, string message)
+  {
+    listIsValid = isValid;
+    validationErrorMessage = message;
+    StateHasChanged();
+  }
+
+  // calls the API to see if the vanity is stil available for use
+  private async Task<bool> VanityUrlIsTaken(string vanityUrl)
+  {
+    try
     {
-        StateContainer.OnChange += StateHasChanged;
+      var response = await Http.GetAsync($"api/links/{vanityUrl.Trim().ToLower()}");
+
+      if (response.StatusCode == System.Net.HttpStatusCode.OK)
+      {
+        return true;
+      }
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine(ex.Message);
     }
 
-    [Parameter]
-    public bool IsPublished { get; set; } = false;
-
-    private Debouncer debouncer = new Debouncer(300);
-    private bool listIsValid = true;
-    private string validationErrorMessage = "";
-    private string validationErrorClass => listIsValid ? "" : "invalid";
-    private string validationMessageClass => listIsValid ? "is-invisible" : "is-visible";
-
-    bool PublishEnabled(bool valid)
-    {
-        if (valid && StateContainer.LinkBundle.Links.Count > 0) return true;
-        return false;
-    }
-
-    private void ValidateVanityUrl(ChangeEventArgs e)
-    {
-        var vanityUrl = e.Value?.ToString();
-        StateContainer.LinkBundle.VanityUrl = vanityUrl;
-        listIsValid = true;
-
-        if (String.IsNullOrEmpty(vanityUrl)) return;
-
-        // Ensure the vanity url contains only letters, numbers, and dashes without using regex
-        if (vanityUrl.Any(c => !char.IsLetterOrDigit(c) && c != '-'))
-        {
-            // if the data annotations validation fails, no need to check if the vanity url is taken
-            listIsValid = false;
-            validationErrorMessage = "Vanity URLs can only contain letters, numbers, and dashes.";
-            return;
-        }
-
-        debouncer.Debounce(async () =>
-        {
-            // the characters are valid, so now check to see if the vanity url is already in use
-            await VanityUrlIsTaken(vanityUrl);
-            StateHasChanged();
-        });
-    }
-
-    // calls the API to see if the vanity is stil available for use
-    private async Task<bool> VanityUrlIsTaken(string vanityUrl)
-    {
-
-        var response = await Http.GetAsync($"api/links/{vanityUrl}");
-
-        if (response.StatusCode == System.Net.HttpStatusCode.OK)
-        {
-            listIsValid = false;
-            validationErrorMessage = "This vanity URL is already in use. Please choose another.";
-            return true;
-        }
-
-        return false;
-    }
+    return false;
+  }
 
     private async Task PublishLinkBundle()
     {
@@ -133,5 +150,6 @@
     public void Dispose()
     {
         StateContainer.OnChange -= StateHasChanged;
+        debouncer.Dispose();
     }
 }

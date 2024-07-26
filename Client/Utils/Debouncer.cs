@@ -1,20 +1,24 @@
-using Microsoft.AspNetCore.Components;
-
 namespace BlazorApp.Client.Utils;
 
 public class Debouncer
 {
-  private Timer? timer;
-  private readonly int delay;
+	private Timer? _timer;
+	private readonly object _lock = new object();
 
-  public Debouncer(int delay)
-  {
-    this.delay = delay;
-  }
+	public void Debounce(int milliseconds, Action action)
+	{
+		lock (_lock)
+		{
+			_timer?.Dispose();
+			_timer = new Timer(_ => action(), null, milliseconds, Timeout.Infinite);
+		}
+	}
 
-  public void Debounce(Action action)
-  {
-    timer?.Dispose();
-    timer = new Timer(_ => action(), null, delay, Timeout.Infinite);
-  }
+	public void Dispose()
+	{
+		lock (_lock)
+		{
+			_timer?.Dispose();
+		}
+	}
 }
