@@ -17,7 +17,6 @@ namespace Api.Functions
         {
             try
             {
-
                 var databaseName = configuration["COSMOSDB_DATABASE"];
                 var containerName = configuration["COSMOSDB_CONTAINER"];
 
@@ -55,7 +54,6 @@ namespace Api.Functions
                 await res.WriteAsJsonAsync(new { error = "Unauthorized" }, HttpStatusCode.Unauthorized);
 
                 return res;
-
             }
             catch (Exception ex)
             {
