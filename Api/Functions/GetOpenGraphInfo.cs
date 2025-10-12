@@ -13,29 +13,31 @@ namespace Api.Functions
         public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "oginfo")] HttpRequestData req)
         {
             var link = await req.ReadFromJsonAsync<Link>();
+            if(link is null)
+            {
+                return await req.CreateJsonResponse(HttpStatusCode.BadRequest, "Unable to parse Link");
+            }
+
             if (!link.Url.StartsWith("http://") && !link.Url.StartsWith("https://"))
             {
                 link.Url = $"https://{link.Url}";
             }
 
-            var httpClient = new HttpClient(new HttpClientHandler { AllowAutoRedirect = true });
+            var response = await GetResponseFromAsync(link.Url);
 
-            // add a header to mimic a browser
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0");
-            httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-            httpClient.DefaultRequestHeaders.AcceptLanguage.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("en-US", 0.9));
-            httpClient.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue { NoCache = true };
-
-            var response = await httpClient.GetAsync(link.Url);
+            if(response is null)
+            {
+                return await req.CreateJsonResponse(HttpStatusCode.BadRequest, "Unable to load URL");
+            }
 
             // if response status code is 301 or 302, follow the redirect
             if (response.StatusCode == HttpStatusCode.Moved || response.StatusCode == HttpStatusCode.MovedPermanently)
             {
                 link.Url = response.Headers.Location.AbsoluteUri;
-                response = await httpClient.GetAsync(link.Url);
+                response = await GetResponseFromAsync(link.Url);
             }
 
-            if (response.StatusCode != HttpStatusCode.OK)
+            if (response is null || response.StatusCode != HttpStatusCode.OK)
             {
                 return await req.CreateJsonResponse(HttpStatusCode.BadRequest, "Unable to load URL");
             }
@@ -76,8 +78,8 @@ namespace Api.Functions
             {
                 var uri = new System.Uri(baseUri);
                 var faviconUrl = $"{uri.Scheme}://{uri.Host}/favicon.ico";
-                var faviconResponse = await httpClient.GetAsync(faviconUrl);
-                if (faviconResponse.StatusCode == HttpStatusCode.OK)
+                var faviconResponse = await GetResponseFromAsync(faviconUrl);
+                if (faviconResponse is not null && faviconResponse.StatusCode == HttpStatusCode.OK)
                 {
                     image = faviconUrl;
                 }
@@ -96,6 +98,29 @@ namespace Api.Functions
 
             // Return the updated link
             return await req.CreateOkResponse(link);
+        }
+
+        private static async Task<HttpResponseMessage> GetResponseFromAsync(string url)
+        {
+            var httpClient = new HttpClient(new HttpClientHandler { AllowAutoRedirect = true });
+
+            // add a header to mimic a browser
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0");
+            httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+            httpClient.DefaultRequestHeaders.AcceptLanguage.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("en-US", 0.9));
+            httpClient.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue { NoCache = true };
+
+            HttpResponseMessage response = null;
+            try
+            {
+                response = await httpClient.GetAsync(url);
+            }
+            finally
+            {
+                httpClient.Dispose();
+            }
+
+            return response;
         }
     }
 }
